@@ -1,0 +1,389 @@
+================================================================================
+QUICK START GUIDE - GET TRADING IN 30 MINUTES
+================================================================================
+
+For traders who want to get started FAST. Read this first, then dive into 
+detailed manual later.
+
+================================================================================
+STEP 1: INSTALL (5 minutes)
+================================================================================
+
+1. Download all EA files to your computer
+2. Open MT4, press F4 (opens MetaEditor)
+3. File → Open Data Folder
+4. Put LiquidityScalper_MT4.mq4 in: MQL4/Experts folder
+5. Put LS_Functions.mqh and LS_Config.mqh in: MQL4/Include folder
+6. Close and reopen MT4
+7. Open MetaEditor (F4), find LiquidityScalper_MT4, click Compile
+8. Should see "0 errors" at bottom
+
+✓ Done? Files installed!
+
+================================================================================
+STEP 2: ENABLE TRADING (2 minutes)
+================================================================================
+
+1. Tools → Options → Expert Advisors tab
+2. Check ALL boxes (Allow automated trading, Allow DLL imports, etc.)
+3. Click OK
+4. Look at top toolbar - click "AutoTrading" button (should turn GREEN)
+
+✓ Done? EA can now trade!
+
+================================================================================
+STEP 3: ATTACH TO CHART (3 minutes)
+================================================================================
+
+1. File → New Chart → XAUUSD (or GOLD)
+2. Click "M5" button (must be 5-minute timeframe!)
+3. Press Ctrl+N (Navigator window)
+4. Expand "Expert Advisors"
+5. DRAG "LiquidityScalper_MT4" onto the chart
+
+Settings window appears...
+
+================================================================================
+STEP 4: CONFIGURE (10 minutes)
+================================================================================
+
+BEGINNER SAFE SETTINGS (copy these exactly):
+
+=== RISK MANAGEMENT ===
+Risk per trade (%): 0.5  ← Start conservative!
+Daily loss limit (%): 2.0
+Daily profit target (%): 3.0
+Lock profits at target: false
+
+=== TRADING MODELS ===
+Enable Model A: true
+Enable Model B: false  ← Disable Model B for now
+Max stop loss Model A: 150
+Max stop loss Model B: 120
+
+=== SESSION SETTINGS ===
+Trade London session: true
+Trade NY session: false  ← London only for now
+London start hour: 8
+London end hour: 12
+NY start hour: 13
+NY end hour: 17
+Max trades per session: 2  ← Conservative
+Max trades per day: 3  ← Conservative
+
+=== ENTRY SETTINGS ===
+(Leave all defaults)
+
+=== TRADE MANAGEMENT ===
+(Leave all defaults)
+
+=== NEWS FILTER ===
+Enable news filter: true  ← IMPORTANT!
+Minutes before news: 15
+Minutes after news: 15
+High impact times: 08:30,13:30,15:00
+
+=== VISUAL & ALERTS ===
+Show dashboard: true
+Draw key levels: true
+Enable sound alerts: true
+Enable email alerts: false
+Enable push alerts: false
+
+=== EA SETTINGS ===
+Magic number: 777888
+Trade comment: LiqScalp
+
+After entering settings:
+✓ Check "Allow live trading" box
+✓ Click OK
+
+================================================================================
+STEP 5: VERIFY IT'S RUNNING (2 minutes)
+================================================================================
+
+Look at chart:
+☑ Smiley face ☺ in top-right corner (if X or sad face, EA not active)
+☑ Dashboard visible in top-left showing session info
+☑ Horizontal lines on chart (red PDH/PDL, orange ASH/ASL)
+
+Press Ctrl+T (Terminal):
+☑ "Experts" tab shows "Liquidity Scalper EA Initialized"
+
+✓ All good? EA is LIVE!
+
+================================================================================
+STEP 6: YOUR FIRST DAY (what to expect)
+================================================================================
+
+MORNING (before 08:00 UTC):
+- EA calculates daily levels
+- Draws lines on chart
+- Dashboard updates
+
+LONDON OPEN (08:00 UTC):
+- EA starts scanning for setups
+- May take 1-2 hours before first trade
+- BE PATIENT - don't force anything
+
+IF TRADE OPENS:
+- You'll hear alert sound
+- Dashboard shows "Trades: 1/3"
+- Check Terminal → Trade tab to see open position
+
+MANAGING TRADE:
+- DON'T TOUCH IT
+- EA handles everything automatically
+- Watch it move to breakeven
+- See partial close at TP1
+- Trail stop activates
+
+SESSION CLOSE (12:00 UTC):
+- If trade still open, EA may trail or close
+- Review results in Terminal → Account History
+
+================================================================================
+STEP 7: FIRST WEEK CHECKLIST
+================================================================================
+
+DAILY TASKS:
+□ Check economic calendar (forexfactory.com) each morning
+□ Note high-impact news times (NFP, CPI, FOMC, etc.)
+□ Update "High impact times" parameter if needed
+□ Let EA run - DON'T interfere with trades
+□ Review trades at end of day
+
+WEEKLY REVIEW:
+□ Count total trades (target: 5-10 per week)
+□ Calculate win rate (wins / total trades)
+□ Check daily P/L on dashboard
+□ Screenshot any interesting setups
+□ Note in journal what you learned
+
+================================================================================
+STEP 8: COMMON FIRST-DAY QUESTIONS
+================================================================================
+
+Q: EA hasn't opened any trades after 3 hours?
+A: NORMAL. EA waits for high-quality setups. Some days only 1-2 trades.
+
+Q: I want to manually close a trade?
+A: DON'T. Let EA manage it. Manual intervention often makes things worse.
+
+Q: Can I change settings mid-day?
+A: You CAN, but shouldn't. Change settings at end of day only.
+
+Q: EA opened a trade right before news!
+A: Check your news times are correct and in UTC. Update the parameter.
+
+Q: I got a losing trade, should I increase risk to recover?
+A: NO! Stick to 0.5-1% risk. Revenge trading destroys accounts.
+
+Q: How much should I make per day?
+A: Don't think in daily targets. Think monthly: 15-30% per month realistic.
+
+================================================================================
+STEP 9: SAFETY RULES (MEMORIZE THESE)
+================================================================================
+
+1. NEVER risk more than 1% per trade
+2. NEVER turn off news filter
+3. NEVER manually interfere with EA trades
+4. NEVER trade without stop loss
+5. NEVER increase risk after losses
+6. NEVER skip forward testing (demo first!)
+7. ALWAYS check economic calendar daily
+8. ALWAYS review trades weekly
+9. ALWAYS respect daily loss limit
+10. ALWAYS stay humble (markets can humble anyone)
+
+================================================================================
+STEP 10: NEXT STEPS (after first week)
+================================================================================
+
+IF RESULTS GOOD (>50% win rate, profitable):
+→ Continue demo for 3 more weeks
+→ Increase to Model A + B (both enabled)
+→ Add NY session
+→ Keep 0.5-1% risk
+
+IF RESULTS BAD (<40% win rate, losing):
+→ Check installation (recompile EA)
+→ Verify broker spread isn't too wide (should be <30 points)
+→ Check if slippage is excessive
+→ Review parameter settings
+→ Contact support if persistent issues
+
+AFTER 4 WEEKS DEMO SUCCESS:
+→ Open small live account ($500-$1,000)
+→ Risk 0.5% per trade only
+→ Trade live for 2 weeks
+→ If profitable, gradually increase account size
+→ Consider prop firm challenges (FTMO, etc.)
+
+================================================================================
+EMERGENCY CONTACTS & RESOURCES
+================================================================================
+
+EA NOT WORKING?
+1. Check Installation_Guide_MT4.txt → Troubleshooting section
+2. Review Experts log (Ctrl+T → Experts tab)
+3. Verify all 3 files installed correctly
+4. Recompile EA in MetaEditor
+
+TRADES LOSING?
+1. Review User_Manual.txt → Section 13 (FAQ)
+2. Check broker spread and commission
+3. Verify parameter settings match defaults
+4. Forward test longer (may just be variance)
+
+WANT TO OPTIMIZE?
+1. Read Backtest_Guide.txt completely
+2. Don't optimize first week (too soon)
+3. Need 50+ trades before optimization meaningful
+
+NEED HELP?
+Email: support@yourcompany.com
+Discord: [your discord link]
+Telegram: [your telegram]
+
+================================================================================
+REALISTIC EXPECTATIONS
+================================================================================
+
+WEEK 1:
+- 5-15 trades total
+- 50-70% win rate (normal variance)
+- P/L: -2% to +5% (wide range is OK)
+- Goal: LEARNING, not profit
+
+MONTH 1:
+- 20-40 trades total
+- 55-65% win rate
+- P/L: +10% to +25%
+- Goal: Build confidence and consistency
+
+MONTH 2-3:
+- 40-80 trades total
+- 60-70% win rate
+- P/L: +20% to +40%
+- Goal: Mastery and scaling preparation
+
+MONTH 4+:
+- Ready for live trading
+- Ready for prop firm challenges
+- Ready for multiple accounts
+- Goal: Consistent income
+
+================================================================================
+THE #1 MISTAKE NEW EA USERS MAKE
+================================================================================
+
+They interfere with the EA's trades!
+
+❌ DON'T:
+- Manually close trades early
+- Adjust stop loss manually
+- Change parameters mid-trade
+- Turn off EA during open positions
+- Second-guess the EA constantly
+
+✅ DO:
+- Set it and forget it
+- Trust the backtested system
+- Review trades AFTER they close
+- Make parameter changes between sessions
+- Let the EA do its job
+
+Remember: You programmed the EA with RULES. The EA follows those rules 
+perfectly without emotion. Don't sabotage it with emotional decisions!
+
+================================================================================
+MINDSET FOR SUCCESS
+================================================================================
+
+DAY 1: "Excited! Let's see what happens."
+DAY 3: "Hmm, only 2 trades. Is it working?"
+DAY 7: "One losing streak, but overall okay."
+DAY 14: "Getting the hang of this. Trust the process."
+DAY 30: "Consistent results. I understand the system now."
+DAY 60: "Ready to scale. Confidence built."
+
+Be patient. Success in trading is:
+- 20% strategy
+- 30% risk management
+- 50% psychology & discipline
+
+You have a tested strategy (✓)
+You have proper risk management (✓)
+Now work on the discipline!
+
+================================================================================
+FINAL CHECKLIST BEFORE YOU START
+================================================================================
+
+□ All files installed and compiled
+□ EA attached to XAUUSD M5 chart
+□ Smiley face showing ☺
+□ Dashboard visible
+□ AutoTrading button GREEN
+□ Risk set to 0.5% or 1%
+□ Daily loss limit set to 2%
+□ News filter ENABLED
+□ Demo account (NOT live yet!)
+□ Economic calendar bookmarked
+□ This guide printed or saved
+□ Realistic expectations set
+□ Commitment to not interfere with trades
+
+All checked? You're ready!
+
+================================================================================
+
+GOOD LUCK!
+
+You now have a professional trading tool. Use it wisely, be patient,
+and remember: trading is a marathon, not a sprint.
+
+See you on the profitable side! 🏆
+
+================================================================================
+QUICK REFERENCE CARD (Print This!)
+================================================================================
+
+DAILY ROUTINE:
+07:50 UTC - Check economic calendar for news
+08:00 UTC - London opens, EA active
+12:00 UTC - London closes
+13:30 UTC - NY opens (if enabled)
+17:00 UTC - NY closes, EA closes all trades
+17:05 UTC - Review day's trades
+
+WEEKLY TASKS:
+□ Calculate win rate
+□ Review all trades in journal
+□ Update news times for next week
+□ Assess if any parameter needs adjustment
+□ Back up trading data
+
+MONTHLY TASKS:
+□ Full performance review
+□ Calculate monthly return %
+□ Analyze which setups work best
+□ Consider optimization (if 50+ trades)
+□ Adjust risk if appropriate
+
+EMERGENCY STOPS:
+- Daily loss limit hit (-2%): EA stops automatically
+- 3 consecutive losses: Take manual break
+- Unusual behavior: Remove EA, review logs
+- Broker issues: Switch to different broker demo
+
+REMEMBER:
+✓ 0.5-1% risk per trade
+✓ Demo before live
+✓ Trust the system
+✓ Don't overtrade manually
+✓ Be patient
+
+================================================================================

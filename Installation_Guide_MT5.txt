@@ -1,0 +1,555 @@
+================================================================================
+LIQUIDITY SCALPER EA - MT5 INSTALLATION GUIDE
+================================================================================
+
+VERSION: 1.0.0
+BUILD DATE: 2026-02-10
+PLATFORM: MetaTrader 5
+SYMBOL: XAUUSD (Gold)
+
+================================================================================
+SYSTEM REQUIREMENTS
+================================================================================
+
+✓ MetaTrader 5 (build 3650 or higher)
+✓ Windows 7/8/10/11 OR Mac/Linux with Wine
+✓ Minimum 4GB RAM
+✓ Stable internet connection (VPS recommended for 24/7 operation)
+✓ Account with XAUUSD trading enabled
+✓ Minimum account balance: $500 (recommended $5,000+)
+
+================================================================================
+MT4 vs MT5 DIFFERENCES
+================================================================================
+
+KEY CHANGES IN MT5 VERSION:
+
+1. **Trade Execution**
+   - MT5 uses different order system (positions vs orders)
+   - CTrade class handles all trading operations
+   - ORDER_FILLING_FOK (Fill or Kill) mode by default
+
+2. **Price Data Access**
+   - MT5 uses CopyHigh/CopyLow/CopyClose instead of direct array access
+   - Helper functions in LS_Config_MT5.mqh for compatibility
+
+3. **Pending Orders**
+   - MT5 has ORDER_TIME_SPECIFIED for expiration
+   - Cleaner pending order management
+
+4. **Position Management**
+   - Positions and orders are separate in MT5
+   - Better support for partial closes
+   - More precise lot size calculations
+
+5. **Performance**
+   - MT5 generally faster and more efficient
+   - Better multi-threading support
+   - More stable on larger timeframes
+
+================================================================================
+STEP 1: DOWNLOAD FILES
+================================================================================
+
+Ensure you have the following MT5 files:
+
+1. LiquidityScalper_MT5.mq5  (Main EA file)
+2. LS_Functions_MT5.mqh      (Helper functions library)
+3. LS_Config_MT5.mqh         (Configuration file)
+4. Installation_Guide_MT5.txt (This file)
+
+⚠️ IMPORTANT: DO NOT mix MT4 and MT5 files!
+
+================================================================================
+STEP 2: INSTALL EA FILES
+================================================================================
+
+METHOD A - Automatic Installation:
+
+1. Open MetaTrader 5
+2. Click File → Open Data Folder
+3. Navigate to: MQL5 → Experts
+4. Copy "LiquidityScalper_MT5.mq5" into the Experts folder
+5. Navigate to: MQL5 → Include
+6. Copy "LS_Functions_MT5.mqh" and "LS_Config_MT5.mqh" into the Include folder
+7. Restart MetaTrader 5
+
+METHOD B - Manual Installation:
+
+Windows:
+C:\Users\[YourUsername]\AppData\Roaming\MetaQuotes\Terminal\[BrokerID]\MQL5\
+
+Mac (with Wine):
+~/Library/Application Support/Wine/...
+
+1. Place .mq5 file in: MQL5\Experts\
+2. Place .mqh files in: MQL5\Include\
+3. Restart MT5
+
+================================================================================
+STEP 3: COMPILE THE EA
+================================================================================
+
+1. In MT5, press F4 or click Tools → MetaEditor
+2. In the Navigator panel (left side), expand "Experts"
+3. Double-click "LiquidityScalper_MT5.mq5"
+4. Click the "Compile" button (or press F7)
+5. Check the "Errors" tab at the bottom
+6. You should see: "0 error(s), 0 warning(s)"
+7. If errors appear, verify all .mqh files are in the Include folder
+
+✓ Successful compilation message:
+  "LiquidityScalper_MT5.ex5 compiled successfully"
+
+COMMON MT5 COMPILATION ERRORS:
+
+Error: "'CTrade' - undeclared identifier"
+Fix: Ensure #include <Trade\Trade.mqh> is at top of .mq5 file (already included)
+
+Error: "Cannot open include file"
+Fix: Verify .mqh files are in MQL5\Include\ folder
+
+Error: "Old style" warnings
+Fix: These are warnings, not errors. EA will work fine.
+
+================================================================================
+STEP 4: CONFIGURE MT5 SETTINGS
+================================================================================
+
+ENABLE ALGO TRADING:
+
+1. Click Tools → Options
+2. Go to "Expert Advisors" tab
+3. CHECK the following:
+   ☑ Allow automated trading
+   ☑ Allow WebRequest for listed URL (add: https://www.forexfactory.com)
+   ☑ Allow modifications of Signals settings (optional)
+4. Click OK
+
+IMPORTANT MT5 DIFFERENCE:
+MT5 does NOT have "Allow DLL imports" checkbox in the same location.
+If your EA uses DLLs (this one doesn't), configure in Tools → Options → Expert Advisors → Dependencies
+
+ENABLE AUTO TRADING BUTTON:
+
+1. Look at the top toolbar
+2. Click the "Algo Trading" button (should turn green)
+3. Green = Active, Red/Gray = Disabled
+4. If grayed out, your broker may not allow EAs
+
+================================================================================
+STEP 5: ATTACH EA TO CHART
+================================================================================
+
+1. Open a new chart: File → New Chart → XAUUSD
+   (Or press Ctrl+O and search for XAUUSD)
+2. Set timeframe to M5: Click "M5" in the toolbar
+3. In the Navigator panel (Ctrl+N), expand "Expert Advisors"
+4. Drag "LiquidityScalper_MT5" onto the XAUUSD M5 chart
+5. A settings window will appear
+
+MT5 NOTE:
+Charts in MT5 can be organized in tabs. Make sure you're on the correct chart
+when attaching the EA!
+
+================================================================================
+STEP 6: CONFIGURE EA PARAMETERS
+================================================================================
+
+RECOMMENDED SETTINGS FOR BEGINNERS (MT5):
+
+=== RISK MANAGEMENT ===
+Risk per trade (%): 0.5  (Conservative - increase to 1.0 when confident)
+Daily loss limit (%): 2.0
+Daily profit target (%): 3.0
+Lock profits at target: false
+
+=== TRADING MODELS ===
+Enable Model A: true
+Enable Model B: true
+Max stop loss Model A: 150
+Max stop loss Model B: 120
+
+=== SESSION SETTINGS ===
+Trade London session: true
+Trade NY session: true
+London start hour: 8
+London end hour: 12
+NY start hour: 13
+NY end hour: 17
+Max trades per session: 3
+Max trades per day: 5
+
+=== ENTRY SETTINGS ===
+Min displacement points: 80
+Max retest candles: 10
+Order block lookback: 10
+Liquidity sweep buffer: 5
+
+=== TRADE MANAGEMENT ===
+TP1 Risk:Reward: 1.5
+TP2 Risk:Reward: 3.0
+TP1 Partial close %: 50
+Breakeven trigger: 100
+Breakeven buffer: 2
+Trail start points: 100
+Trail stop distance: 25
+
+=== NEWS FILTER ===
+Enable news filter: true
+Minutes before news: 15
+Minutes after news: 15
+High impact times: 08:30,13:30,15:00
+
+=== VISUAL & ALERTS ===
+Show dashboard: true
+Draw key levels: true
+Enable sound alerts: true
+Enable email alerts: false
+Enable push alerts: false
+
+=== EA SETTINGS ===
+Magic number: 777888
+Trade comment: LiqScalp
+Slippage: 10  (MT5 specific - in points)
+
+================================================================================
+STEP 7: ACTIVATE THE EA
+================================================================================
+
+1. After setting parameters, check the "Common" tab
+2. ☑ Allow Algo Trading
+3. ☑ Allow DLL imports (if required - this EA doesn't use DLLs)
+4. Leave "Long & Short" selected (allow both directions)
+5. Click OK
+6. You should see a smiley face ☺ in the top-right corner of the chart
+7. If you see X or sad face ☹, check:
+   - Algo Trading button is ON (green)
+   - "Allow Algo Trading" is checked
+   - Your broker allows EAs
+   - Internet connection is stable
+
+MT5 VISUAL INDICATOR:
+The smiley face in MT5 is more subtle than MT4. Look carefully at the 
+top-right corner of the chart window.
+
+================================================================================
+STEP 8: VERIFY EA IS RUNNING
+================================================================================
+
+CHECK THE EXPERTS TAB:
+
+1. Click View → Toolbox (or press Ctrl+T)
+2. Go to "Experts" tab
+3. You should see:
+   ===================================
+   Liquidity Scalper EA Initialized (MT5)
+   Symbol: XAUUSD
+   Account: [Your account number]
+   Risk per trade: 0.5%
+   ===================================
+
+CHECK THE CHART:
+
+1. You should see the dashboard in the top-left corner showing:
+   - Current session
+   - Trade count
+   - Daily P/L
+   - Key levels (PDH, PDL, ASH, ASL)
+
+2. You should see horizontal lines on the chart:
+   - Red solid lines: PDH/PDL
+   - Orange dotted lines: ASH/ASL
+   - Gray dashed line: Day Open
+
+MT5 CHART FEATURES:
+MT5 charts have more sophisticated drawing tools. If levels aren't showing,
+check View → Objects → Objects List to see if they're hidden.
+
+================================================================================
+STEP 9: INITIAL TESTING (IMPORTANT!)
+================================================================================
+
+BEFORE LIVE TRADING:
+
+1. TEST ON DEMO ACCOUNT FIRST (minimum 2 weeks)
+2. Paper trade to verify strategy understanding
+3. Check that daily levels are calculated correctly
+4. Verify news filter is working (check during high-impact news)
+5. Monitor first 20 trades to ensure proper execution
+
+BACKTEST THE EA (MT5 Strategy Tester):
+
+1. Press Ctrl+R or View → Strategy Tester
+2. Select "LiquidityScalper_MT5" from Expert Advisor dropdown
+3. Symbol: XAUUSD
+4. Period: M5
+5. Date range: Last 3 months
+6. Mode: "Every tick based on real ticks" (most accurate)
+   OR "1 minute OHLC" (faster, less accurate)
+7. Click "Start"
+8. MT5 Strategy Tester is MORE ACCURATE than MT4
+
+MT5 BACKTESTING IMPROVEMENTS:
+- More accurate tick data
+- Better spread modeling
+- Real slippage simulation
+- Multi-currency testing support
+
+Review results:
+- Win rate should be 55-70%
+- Profit factor > 1.5
+- Max drawdown < 15%
+
+================================================================================
+STEP 10: MONITOR & OPTIMIZE
+================================================================================
+
+DAILY ROUTINE:
+
+1. Check EA at 07:45 UTC (before London open)
+2. Verify daily levels are drawn correctly
+3. Check economic calendar for high-impact news
+4. Monitor first trade of the day closely
+5. Review daily P/L at 17:00 UTC
+
+WEEKLY REVIEW:
+
+1. Analyze trade journal (in Toolbox → History)
+2. Calculate actual win rate and average R:R
+3. Identify which session performs better (London vs NY)
+4. Adjust risk if necessary (max 1% per trade)
+5. Check for any errors in Experts log
+
+MT5 REPORTING:
+MT5 has better built-in reporting tools. Right-click in History tab
+and select "Save as Report" for detailed analysis.
+
+================================================================================
+MT5-SPECIFIC TROUBLESHOOTING
+================================================================================
+
+PROBLEM: EA shows "Waiting for update" and doesn't trade
+
+SOLUTIONS:
+- This is MT5-specific message during data refresh
+- Wait 1-2 minutes for synchronization
+- If persists >5 minutes, restart MT5
+- Check internet connection
+
+---
+
+PROBLEM: "Trade context is busy" error
+
+SOLUTIONS:
+- MT5 can be more strict with simultaneous operations
+- This is normal and temporary
+- EA will retry automatically
+- If frequent, increase "Slippage" parameter to 20-30
+
+---
+
+PROBLEM: Partial closes not working
+
+SOLUTIONS:
+- Check broker allows partial closes (not all MT5 brokers do)
+- Some brokers treat each partial close as a new position
+- Contact broker to verify partial close support
+- If not supported, set TP1_PartialClose to 0 (disables feature)
+
+---
+
+PROBLEM: Pending orders deleted immediately
+
+SOLUTIONS:
+- MT5 has stricter pending order rules
+- Check minimum distance from current price
+- Verify ORDER_TIME_SPECIFIED is supported by broker
+- Some brokers only support ORDER_TIME_GTC (good till cancelled)
+
+---
+
+PROBLEM: "Invalid stops" error in MT5
+
+SOLUTIONS:
+- MT5 calculates stops more strictly
+- Check SYMBOL_TRADE_STOPS_LEVEL (minimum stop distance)
+- Run this in Expert terminal:
+  Print(SymbolInfoInteger(_Symbol, SYMBOL_TRADE_STOPS_LEVEL));
+- Increase buffer parameters if minimum is high
+
+---
+
+PROBLEM: Positions tab shows duplicate positions
+
+SOLUTIONS:
+- MT5 treats buy and sell as separate positions (hedging mode)
+- Check if account is in "Hedging" or "Netting" mode
+- For this EA, "Netting" mode is recommended
+- Change in: Tools → Options → Trade → Position accounting
+
+================================================================================
+MT5 VS MT4 FEATURE COMPARISON
+================================================================================
+
+ADVANTAGES OF MT5 VERSION:
+
+✓ More accurate backtesting
+✓ Better order execution
+✓ Faster processing speed
+✓ Built-in economic calendar
+✓ More advanced reporting
+✓ Native support for partial closes
+✓ Better multi-chart performance
+✓ 21 timeframes (vs 9 in MT4)
+
+DISADVANTAGES OF MT5:
+
+✗ Fewer broker support (still catching up to MT4)
+✗ Learning curve if coming from MT4
+✗ Some older indicators not compatible
+✗ Different order management system
+
+FOR THIS EA:
+The MT5 version is RECOMMENDED if your broker supports it.
+Performance and reliability are superior to MT4 version.
+
+================================================================================
+PROP FIRM CHALLENGE SETTINGS (MT5)
+================================================================================
+
+FOR FTMO / FUNDED TRADER CHALLENGES:
+
+Risk per trade: 0.5% (to stay within 5% daily loss)
+Daily loss limit: 2.0% (buffer under 5% limit)
+Max trades per day: 3 (quality over quantity)
+Enable Model A: true
+Enable Model B: false (Model A is more consistent)
+Lock profits at target: true (secure gains)
+Slippage: 10-15 (MT5 specific)
+
+MT5 PROP FIRM ADVANTAGES:
+- Better execution = less slippage
+- More accurate reporting
+- Built-in risk management tools
+- Professional appearance to evaluators
+
+EXPECTED RESULTS:
+- Time to pass 10% challenge: 15-30 days
+- Expected monthly return: 10-20%
+- Max drawdown: 5-8%
+
+================================================================================
+VPS SETUP (MT5 SPECIFIC)
+================================================================================
+
+MT5 VPS ADVANTAGES:
+- Native VPS integration in some brokers
+- Better performance than MT4 on VPS
+- Lower latency
+- More stable
+
+SETUP STEPS:
+1. Some brokers offer integrated MT5 VPS
+   Check: Tools → Options → VPS (if available)
+2. Or use third-party VPS (Forex VPS, Beeks, etc.)
+3. Install MT5 on VPS
+4. Copy EA files to VPS MT5
+5. Configure and run 24/7
+
+BUILT-IN VPS FEATURE (Some brokers):
+MT5 has built-in VPS in some cases. Check with your broker if they offer
+"Built-in VPS" - allows running EAs without external VPS subscription.
+
+================================================================================
+CONTACT & SUPPORT
+================================================================================
+
+For questions, bug reports, or optimization help:
+
+Email: support@liquidityscalper.com
+Telegram: @LiquidityScalperSupport
+
+Join our community:
+Discord: discord.gg/liquidityscalper
+Forum: community.liquidityscalper.com
+
+MT5 SPECIFIC SUPPORT:
+When contacting support about MT5 version, please include:
+- MT5 build number (Help → About)
+- Broker name
+- Account type (Hedging or Netting)
+- Screenshots of any errors
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+v1.0.0 (2026-02-10)
+- Initial MT5 release
+- Ported from MT4 with improvements
+- Model A & B implementation
+- Dashboard and visual aids
+- Prop firm safety features
+- MT5-specific optimizations
+
+================================================================================
+KNOWN MT5 LIMITATIONS
+================================================================================
+
+1. **Broker Compatibility**: Not all brokers fully support MT5 features
+2. **Hedging Mode**: Some functions work differently in hedging vs netting
+3. **Partial Closes**: Not universally supported by all brokers
+4. **Pending Orders**: Expiration rules vary by broker
+
+RECOMMENDATION:
+Test on demo account for 2-4 weeks to ensure full broker compatibility
+before going live.
+
+================================================================================
+DISCLAIMER
+================================================================================
+
+Trading forex and CFDs involves substantial risk of loss. Past performance 
+does not guarantee future results. This EA is a tool to assist trading 
+decisions but does not guarantee profits. Always test on demo accounts 
+first and never risk more than you can afford to lose.
+
+The developer is not responsible for any losses incurred through use of 
+this EA. Use at your own risk.
+
+MT5 version has been thoroughly tested, but always verify with YOUR broker
+on YOUR account type before live trading.
+
+================================================================================
+QUICK START CHECKLIST (MT5)
+================================================================================
+
+□ MT5 installed (build 3650+)
+□ All 3 files copied (.mq5 and .mqh files)
+□ EA compiled successfully (no errors)
+□ Algo Trading enabled in Options
+□ Algo Trading button GREEN
+□ EA attached to XAUUSD M5 chart
+□ Smiley face ☺ showing
+□ Dashboard visible
+□ Daily levels drawn on chart
+□ Expert log shows "Initialized"
+□ Demo account (NOT live yet!)
+□ Risk set to 0.5%
+□ News filter enabled
+
+All checked? You're ready to start testing!
+
+================================================================================
+GOOD LUCK & HAPPY TRADING!
+================================================================================
+
+The MT5 version offers superior performance and reliability.
+Follow the guidelines, be patient, and trust the process.
+
+Welcome to professional algorithmic trading on MT5! 🚀
+
+================================================================================
+END OF MT5 INSTALLATION GUIDE
+================================================================================

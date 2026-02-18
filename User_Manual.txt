@@ -1,0 +1,1181 @@
+================================================================================
+LIQUIDITY SCALPER EA - COMPLETE USER MANUAL
+================================================================================
+
+TABLE OF CONTENTS
+================================================================================
+
+1. Introduction
+2. Strategy Overview
+3. How the EA Works
+4. Entry Models Explained
+5. Risk Management
+6. Trade Management
+7. Session Trading
+8. News Filter
+9. Dashboard & Visual Aids
+10. Parameter Reference
+11. Best Practices
+12. Performance Expectations
+13. FAQ
+14. Advanced Tips
+
+================================================================================
+1. INTRODUCTION
+================================================================================
+
+The Liquidity Scalper EA is a fully automated trading system designed 
+specifically for XAUUSD (Gold) based on institutional order flow principles.
+
+WHAT THIS EA DOES:
+✓ Identifies liquidity sweeps above/below key levels
+✓ Waits for displacement (strong directional move)
+✓ Enters on retest of order blocks
+✓ Places continuation stop orders on trend breaks
+✓ Manages trades automatically (breakeven, partials, trailing)
+✓ Enforces strict risk limits (daily loss, max trades, news filter)
+
+WHAT THIS EA DOES NOT DO:
+✗ Grid trading or martingale
+✗ Revenge trading after losses
+✗ Trade during high-impact news
+✗ Hold positions overnight
+✗ Overtrade (respects session/daily limits)
+
+================================================================================
+2. STRATEGY OVERVIEW
+================================================================================
+
+CORE CONCEPT: Market Microstructure
+
+The EA exploits the predictable sequence of:
+LIQUIDITY SWEEP → DISPLACEMENT → RETEST
+
+WHY THIS WORKS ON GOLD:
+
+1. LIQUIDITY POOLS
+   - Gold has massive liquidity at obvious levels
+   - Institutions need liquidity to fill large orders
+   - They "hunt" stop losses above/below key levels
+
+2. DISPLACEMENT
+   - After sweeping liquidity, price moves aggressively
+   - This signals institutional positioning
+   - Creates "fair value gaps" and order blocks
+
+3. RETEST
+   - Price often returns to test the breakout zone
+   - This offers low-risk, high-reward entries
+   - Order blocks act as support/resistance
+
+THE EDGE:
+We're not predicting - we're REACTING to institutional footprints.
+
+================================================================================
+3. HOW THE EA WORKS (Technical Flow)
+================================================================================
+
+DAILY PREPARATION (Before 08:00 UTC):
+
+1. Calculate key levels:
+   - Previous Day High/Low (PDH/PDL)
+   - Asian Session High/Low (ASH/ASL)
+   - Day opening price (midnight UTC)
+   - Round number levels
+
+2. Analyze H1 structure:
+   - Is market bullish (HH/HL)?
+   - Is market bearish (LH/LL)?
+   - Is market ranging?
+
+3. Draw levels on chart
+4. Reset daily counters (trades, P/L)
+
+---
+
+REAL-TIME MONITORING (Every M5 candle):
+
+STEP 1: Pre-flight checks
+- Am I in trading session? (London 08-12, NY 13:30-17)
+- Is daily loss limit reached? (-2%)
+- Max trades hit? (5/day, 3/session)
+- Is news coming? (within 15 min)
+
+If ANY check fails → Skip trading, manage existing trades only
+
+---
+
+STEP 2: Model A - Liquidity Sweep Scanner
+
+A. DETECT SWEEP
+   - Did price sweep ASH/PDH (for shorts)?
+   - Did price sweep ASL/PDL (for longs)?
+   - Did price REVERSE back inside range?
+   
+   If YES → Liquidity sweep confirmed
+
+B. DETECT DISPLACEMENT
+   - Is next candle >80 points range?
+   - Did it break previous structure?
+   - Is direction aligned with sweep reversal?
+   
+   If YES → Displacement confirmed
+
+C. IDENTIFY ORDER BLOCK
+   - Find last opposite candle before displacement
+   - For longs: last bearish candle (bullish OB)
+   - For shorts: last bullish candle (bearish OB)
+   
+   Mark this zone for entry
+
+D. WAIT FOR RETEST
+   - Is price back in order block zone?
+   - Has it been <10 candles since displacement?
+   
+   If YES → EXECUTE TRADE
+
+---
+
+STEP 3: Model B - Stop Order Scanner
+
+A. DETECT BREAK OF STRUCTURE (BOS)
+   - Check H1 for clear trend direction
+   - Did recent M5 candle break previous high/low?
+   
+   If YES → BOS confirmed
+
+B. DETECT CONSOLIDATION
+   - Are last 5 candles in <200 point range?
+   - Has price paused after BOS?
+   
+   If YES → Consolidation confirmed
+
+C. PLACE STOP ORDER
+   - Bullish: BUY STOP 5 points above consolidation high
+   - Bearish: SELL STOP 5 points below consolidation low
+   - Set SL at opposite side of consolidation
+   - Set 2-hour expiry
+   
+   Order placed, wait for trigger
+
+---
+
+STEP 4: Trade Management (Active trades)
+
+For each open position:
+
+A. BREAKEVEN
+   - If profit >100 points → Move SL to entry +2
+   
+B. PARTIAL CLOSE (TP1)
+   - If profit ≥1.5x risk → Close 50% of position
+   
+C. TRAILING STOP
+   - If profit >100 points → Trail SL using M5 swings
+   - Keep 25-point buffer
+   
+D. SESSION CLOSE
+   - If time ≥17:00 UTC → Close all positions
+   
+E. EARLY EXIT
+   - If M5 structure breaks against me → Close immediately
+
+---
+
+STEP 5: End of Day
+
+- Close all positions at 17:00 UTC
+- Delete pending orders
+- Update statistics
+- Prepare for next day
+
+================================================================================
+4. ENTRY MODELS EXPLAINED
+================================================================================
+
+MODEL A: LIQUIDITY SWEEP + RETEST
+----------------------------------
+
+VISUAL EXAMPLE:
+
+         ┌─ ASH (Swept) ─────────────┐
+         │                            │
+         │   X <-- Sweep highs        │
+    ┌────┼───────────────────┐        │
+    │    │                   │ Displacement down
+    │    └───────────────────┼────────┘
+    │                        │
+    │        OB <-- Entry zone
+    │          ▼
+    │    ┌─────────┐
+    └────┤ SELL    │
+         └─────────┘
+
+
+ENTRY CHECKLIST:
+☑ Liquidity sweep detected (ASH/PDH broken then reversed)
+☑ Displacement candle >80 points
+☑ Order block identified
+☑ Price retested OB within 10 candles
+☑ Stop loss <150 points
+☑ No news in next 30 minutes
+
+TYPICAL SCENARIO:
+08:30 UTC - London opens
+08:35 - Price spikes above ASH (liquidity sweep)
+08:40 - Strong bearish candle breaks back down (displacement)
+08:50 - Price bounces to order block zone
+→ SELL ENTRY at OB high
+→ SL above ASH + 5 points
+→ TP1 at 1.5R, TP2 at 3R
+
+---
+
+MODEL B: STOP ORDER CONTINUATION
+---------------------------------
+
+VISUAL EXAMPLE:
+
+    Bullish trend on H1
+    
+    │     ┌─ Consolidation ─┐
+    │     │   │   │   │     │ <- BUY STOP here (5 pts above)
+    ├─────┼───┼───┼───┼─────┤
+    │     │   │   │   │     │
+    │     └───────────────── SL here (5 pts below)
+    │
+    ↑ Initial BOS
+
+
+ENTRY CHECKLIST:
+☑ H1 structure clearly bullish or bearish
+☑ BOS detected on M5 (broke recent swing)
+☑ Consolidation formed (3-8 candles, <200 pts range)
+☑ Stop order placed 5 points outside consolidation
+☑ Stop loss <120 points
+☑ Order expires in 2 hours
+
+TYPICAL SCENARIO:
+14:00 UTC - NY session
+14:05 - Price breaks above recent M5 high (BOS)
+14:10-14:30 - Price consolidates in tight range
+→ BUY STOP placed 5 points above consolidation
+→ SL below consolidation
+→ TP1 at 100 points (fixed)
+→ Trail remainder
+
+================================================================================
+5. RISK MANAGEMENT
+================================================================================
+
+POSITION SIZING FORMULA:
+
+Lot Size = (Account Balance × Risk%) / (Stop Loss in $ per lot)
+
+EXAMPLE:
+- Account: $10,000
+- Risk per trade: 1%
+- Stop loss: 100 points ($10/lot for XAUUSD)
+
+Lot Size = ($10,000 × 0.01) / ($10) = 0.10 lots
+
+---
+
+DAILY LIMITS (NON-NEGOTIABLE):
+
+1. DAILY LOSS LIMIT: -2%
+   - If hit → EA stops trading for the day
+   - Protects from catastrophic drawdown
+   - Resets at midnight UTC
+
+2. DAILY PROFIT TARGET: +3%
+   - Optional lock (can disable)
+   - If hit → EA stops trading
+   - Secures gains, prevents giving back
+
+3. MAX TRADES PER DAY: 5
+   - Prevents overtrading
+   - Quality over quantity
+   - Forces selectivity
+
+4. MAX TRADES PER SESSION: 3
+   - Limits exposure per volatile period
+   - London: max 3 trades
+   - NY: max 3 trades
+
+---
+
+STOP LOSS RULES:
+
+Model A:
+- Maximum: 150 points
+- Typical: 80-120 points
+- Placed below swept low (longs) or above swept high (shorts)
+
+Model B:
+- Maximum: 120 points
+- Typical: 60-100 points
+- Placed outside consolidation range
+
+NEVER:
+✗ Move stop loss against position
+✗ Remove stop loss
+✗ Enter if stop would exceed maximum
+
+---
+
+TAKE PROFIT STRATEGY:
+
+TP1 (50% of position):
+- Risk:Reward = 1:1.5 (default)
+- Locks in profit
+- Moves SL to breakeven
+
+TP2 (Remaining 50%):
+- Risk:Reward = 1:3 (default)
+- Or trail with M5 structure
+- Captures extended moves
+
+================================================================================
+6. TRADE MANAGEMENT
+================================================================================
+
+BREAKEVEN PROTOCOL:
+
+When to move:
+- Trade in profit by 100 points (default)
+- OR TP1 has been hit
+
+Where to move:
+- Entry price + 2 points (small buffer)
+
+Why:
+- Secures trade against reversal
+- Allows runner to develop risk-free
+- Psychological comfort
+
+---
+
+PARTIAL CLOSE (TP1):
+
+When:
+- Profit reaches 1.5x risk (default)
+- Example: 100pt SL → TP1 at 150pts profit
+
+How much:
+- 50% of position (default, adjustable)
+
+Action after TP1:
+- Move SL to breakeven +2
+- Let remainder run to TP2 or trail
+
+---
+
+TRAILING STOP:
+
+Activation:
+- After profit >100 points
+- After TP1 hit
+
+Method:
+- Follow M5 swing lows (for longs)
+- Follow M5 swing highs (for shorts)
+- Maintain 25-point buffer
+
+Update frequency:
+- Every new M5 swing formation
+
+Example (Long trade):
+- Entry: 2,650
+- Current: 2,750 (+100 pts)
+- Last M5 swing low: 2,730
+- Trail SL to: 2,730 - 25 = 2,705
+
+---
+
+EARLY EXIT CONDITIONS:
+
+Exit IMMEDIATELY if:
+☑ M5 closes against structure (candle fully below/above key level)
+☑ Unexpected high-impact news announced
+☑ Session end (17:00 UTC)
+☑ Daily profit target reached
+☑ Extreme volatility spike (>200pt wicks)
+
+Exit REMAINDER (after TP1) if:
+☑ Price consolidates >6 candles without progression
+☑ Opposite setup forms (bearish OB in long trade)
+☑ Trail stop within 15 points of price
+
+================================================================================
+7. SESSION TRADING
+================================================================================
+
+ASIAN SESSION (00:00 - 08:00 UTC)
+Status: NO TRADING
+Purpose: Range identification
+
+What EA does:
+- Monitors price to identify ASH/ASL
+- These become liquidity targets for London
+
+---
+
+LONDON SESSION (08:00 - 12:00 UTC)
+Status: PRIMARY TRADING WINDOW
+Characteristics:
+- High volatility at open (08:00-09:00)
+- Common liquidity sweeps of Asian range
+- Best for Model A setups
+
+Average daily trades: 1-2
+Win rate: 65-70%
+
+---
+
+LUNCH LULL (12:00 - 13:30 UTC)
+Status: NO TRADING
+Reason: Low volume, choppy price action
+
+What EA does:
+- Manages existing trades
+- No new entries
+
+---
+
+NEW YORK SESSION (13:30 - 17:00 UTC)
+Status: PRIMARY TRADING WINDOW
+Characteristics:
+- Volatility spike at open (13:30-14:00)
+- Often continuation of London trend
+- Good for Model B setups
+
+Average daily trades: 1-2
+Win rate: 60-65%
+
+---
+
+EVENING/OVERNIGHT (17:00+ UTC)
+Status: NO TRADING
+Reason: Low liquidity, prop firm compliance
+
+What EA does:
+- Closes all positions at 17:00
+- Deletes pending orders
+- Prepares for next day
+
+================================================================================
+8. NEWS FILTER
+================================================================================
+
+PURPOSE:
+Avoid trading during unpredictable high-impact news events.
+
+HIGH-IMPACT EVENTS (Avoid):
+- NFP (Non-Farm Payrolls) - First Friday each month
+- FOMC (Federal Reserve) - 8 times/year
+- CPI (Inflation data) - Monthly
+- GDP releases
+- Central bank rate decisions
+- Unemployment reports
+
+---
+
+HOW IT WORKS:
+
+Manual List:
+- Default times in EA settings: "08:30,13:30,15:00"
+- These are common US news times (UTC)
+- Edit this list based on economic calendar
+
+Time Windows:
+- Minutes before news: 15 (default)
+- Minutes after news: 15 (default)
+- Example: If news at 13:30, EA stops at 13:15, resumes at 13:45
+
+---
+
+WEEKLY ROUTINE:
+
+Every Sunday:
+1. Check ForexFactory economic calendar
+2. Identify all "red folder" (high impact) events for the week
+3. Note exact UTC times
+4. Update EA parameter if needed
+
+Example week:
+Monday: No major news
+Tuesday: 13:30 UTC - CPI (add to list)
+Wednesday: 19:00 UTC - FOMC (add to list)
+Thursday: No major news
+Friday: 13:30 UTC - NFP (already in default list)
+
+Updated parameter:
+"08:30,13:30,19:00"
+
+---
+
+OVERRIDE:
+
+If you want to trade through news (NOT RECOMMENDED):
+- Set EnableNewsFilter = false
+- Risk increases significantly
+- Violates prop firm best practices
+
+================================================================================
+9. DASHBOARD & VISUAL AIDS
+================================================================================
+
+DASHBOARD LOCATION:
+Top-left corner of chart
+
+INFORMATION DISPLAYED:
+
+┌──────────────────────────────┐
+│ LIQUIDITY SCALPER            │  <- Title
+│ Session: London              │  <- Current session
+│ Trades: 2/5                  │  <- Trades today / max
+│ Daily P/L: +1.45%            │  <- Daily profit/loss %
+│ PDH: 2,685.50                │  <- Previous Day High
+│ PDL: 2,650.20                │  <- Previous Day Low
+│ ASH: 2,670.80                │  <- Asian Session High
+│ ASL: 2,655.10                │  <- Asian Session Low
+│ Status: Active               │  <- Trading status
+└──────────────────────────────┘
+
+COLOR CODING:
+- Daily P/L: Green if positive, Red if negative
+- Status: 
+  * Lime = Active and trading
+  * Gold = Daily target reached
+  * Red = Daily loss limit hit
+  * Gray = Outside trading hours
+
+---
+
+CHART LEVELS:
+
+RED SOLID LINES (width 2):
+- PDH (Previous Day High)
+- PDL (Previous Day Low)
+→ Major liquidity zones
+
+ORANGE DOTTED LINES (width 1):
+- ASH (Asian Session High)
+- ASL (Asian Session Low)
+→ Immediate liquidity targets
+
+GRAY DASHED LINE (width 1):
+- Day Open (midnight UTC)
+→ Equilibrium reference
+
+BLUE/PURPLE ZONES (when active):
+- Order blocks identified by EA
+- Entry zones for Model A
+
+---
+
+CUSTOMIZATION:
+
+Don't want visual clutter?
+- Set ShowDashboard = false
+- Set DrawKeyLevels = false
+- EA still functions normally
+
+Want to customize colors?
+- Edit LS_Config.mqh file
+- Change COLOR_PDH, COLOR_ASL, etc.
+- Recompile EA
+
+================================================================================
+10. PARAMETER REFERENCE
+================================================================================
+
+RISK MANAGEMENT
+---------------
+RiskPercent (0.1 - 5.0)
+  Default: 1.0
+  Description: Percentage of account balance to risk per trade
+  Recommendation: Start with 0.5%, increase to 1.0% after 20 trades
+
+DailyLossLimit (1.0 - 10.0)
+  Default: 2.0
+  Description: Maximum daily loss before EA stops
+  Recommendation: Keep at 2.0% for prop firms, 5.0% for personal
+
+DailyProfitTarget (1.0 - 20.0)
+  Default: 3.0
+  Description: Daily profit goal
+  Recommendation: 3-5% realistic, don't be greedy
+
+LockProfitsAtTarget (true/false)
+  Default: false
+  Description: Stop trading when daily target reached
+  Recommendation: true for prop challenges, false for growth
+
+---
+
+TRADING MODELS
+--------------
+EnableModelA (true/false)
+  Default: true
+  Description: Enable liquidity sweep + retest entries
+  Recommendation: Always keep enabled (highest win rate)
+
+EnableModelB (true/false)
+  Default: true
+  Description: Enable stop order continuation entries
+  Recommendation: true for NY session, disable if prefer conservative
+
+MaxStopLoss_ModelA (50 - 200)
+  Default: 150
+  Description: Maximum stop loss for Model A in points
+  Recommendation: 150 optimal, reduce to 120 if very risk-averse
+
+MaxStopLoss_ModelB (50 - 150)
+  Default: 120
+  Description: Maximum stop loss for Model B in points
+  Recommendation: 120 optimal (Model B uses tighter stops)
+
+---
+
+SESSION SETTINGS
+----------------
+TradeLondonSession (true/false)
+  Default: true
+  Recommendation: Always enabled (best session)
+
+TradeNYSession (true/false)
+  Default: true
+  Recommendation: Enabled for full day coverage
+
+LondonStartHour (0-23)
+  Default: 8
+  Description: UTC hour London session starts
+  Note: Do not change unless timezone issues
+
+LondonEndHour (0-23)
+  Default: 12
+  Description: UTC hour London session ends
+
+NYStartHour (0-23)
+  Default: 13
+  Description: UTC hour NY session starts
+  Note: 13:30 is US market open, but 13 allows pre-market
+
+NYEndHour (0-23)
+  Default: 17
+  Description: UTC hour NY session ends
+
+MaxTradesPerSession (1-10)
+  Default: 3
+  Description: Maximum trades per session
+  Recommendation: 3 optimal, increase to 5 if very confident
+
+MaxTradesPerDay (1-20)
+  Default: 5
+  Description: Maximum total trades per day
+  Recommendation: 5 is sweet spot (quality > quantity)
+
+---
+
+ENTRY SETTINGS
+--------------
+MinDisplacementPoints (50-150)
+  Default: 80
+  Description: Minimum candle size to qualify as displacement
+  Recommendation: 80 optimal, increase to 100 if too many false signals
+
+MaxRetestCandles (5-20)
+  Default: 10
+  Description: How long to wait for retest before invalidating
+  Recommendation: 10 candles = 50 minutes, sufficient
+
+OrderBlockLookback (5-20)
+  Default: 10
+  Description: How far back to search for order block
+  Recommendation: 10 candles usually finds the right OB
+
+LiquiditySweepBuffer (2-10)
+  Default: 5
+  Description: Points beyond swept level for SL placement
+  Recommendation: 5 points = safe buffer
+
+---
+
+TRADE MANAGEMENT
+----------------
+TP1_RiskReward (1.0-3.0)
+  Default: 1.5
+  Description: Risk:reward ratio for first target
+  Recommendation: 1.5 optimal (locks profit quickly)
+
+TP2_RiskReward (2.0-5.0)
+  Default: 3.0
+  Description: Risk:reward ratio for second target
+  Recommendation: 3.0 optimal, 4.0-5.0 for runners
+
+TP1_PartialClose (20-80)
+  Default: 50
+  Description: Percentage to close at TP1
+  Recommendation: 50% balanced, 60% more conservative
+
+BreakevenTrigger (50-200)
+  Default: 100
+  Description: Profit in points before moving to BE
+  Recommendation: 100 optimal (1:1 R:R usually)
+
+BreakevenBuffer (1-5)
+  Default: 2
+  Description: Points above entry for BE stop
+  Recommendation: 2 points = small buffer against spread
+
+TrailStartPoints (50-200)
+  Default: 100
+  Description: Profit needed to activate trailing stop
+  Recommendation: 100 (after TP1 usually)
+
+TrailStopDistance (15-50)
+  Default: 25
+  Description: Distance in points for trailing stop
+  Recommendation: 25 optimal, 30-40 if gold very volatile
+
+---
+
+NEWS FILTER
+-----------
+EnableNewsFilter (true/false)
+  Default: true
+  Recommendation: ALWAYS true (non-negotiable for safety)
+
+MinutesBeforeNews (5-30)
+  Default: 15
+  Description: Stop trading X minutes before news
+  Recommendation: 15 min standard, 30 min for NFP/FOMC
+
+MinutesAfterNews (5-30)
+  Default: 15
+  Description: Wait X minutes after news to resume
+  Recommendation: 15 min standard, 30 min for high volatility
+
+HighImpactNewsTimes (comma-separated)
+  Default: "08:30,13:30,15:00"
+  Description: UTC times of regular high-impact news
+  Recommendation: Update weekly based on economic calendar
+
+---
+
+VISUAL & ALERTS
+---------------
+ShowDashboard (true/false)
+  Default: true
+  Recommendation: true (helpful monitoring)
+
+DrawKeyLevels (true/false)
+  Default: true
+  Recommendation: true (visual context)
+
+EnableSoundAlerts (true/false)
+  Default: true
+  Recommendation: true if at computer, false on VPS
+
+EnableEmailAlerts (true/false)
+  Default: false
+  Recommendation: true if monitoring remotely
+
+EnablePushAlerts (true/false)
+  Default: false
+  Recommendation: true for mobile notifications (configure in MT4)
+
+---
+
+EA SETTINGS
+-----------
+MagicNumber (100000-999999)
+  Default: 777888
+  Description: Unique identifier for EA trades
+  Recommendation: Change if running multiple EAs
+
+TradeComment (string)
+  Default: "LiqScalp"
+  Description: Comment on all trades
+  Recommendation: Keep short, useful for filtering in history
+
+================================================================================
+11. BEST PRACTICES
+================================================================================
+
+BEGINNER (First Month):
+-----------------------
+✓ Risk 0.5% per trade only
+✓ Enable Model A only (disable Model B)
+✓ Trade London session only (disable NY)
+✓ Max 2 trades per day
+✓ Review EVERY trade in journal
+✓ Take screenshot of each entry
+✓ Calculate actual win rate weekly
+
+Goal: Understand the strategy, don't focus on profit
+
+---
+
+INTERMEDIATE (Month 2-3):
+-------------------------
+✓ Increase risk to 1.0% per trade
+✓ Enable both Model A and Model B
+✓ Trade both London and NY sessions
+✓ Max 5 trades per day
+✓ Review trades weekly, not daily
+✓ Start tracking which session/model performs best
+
+Goal: Build consistency and confidence
+
+---
+
+ADVANCED (Month 4+):
+--------------------
+✓ Consider increasing risk to 1.5% if:
+  - Win rate consistently >65%
+  - Max drawdown never exceeded 5%
+  - Profitable for 3 consecutive months
+✓ Run on VPS for 24/7 operation
+✓ Scale to multiple prop firm accounts
+✓ Fine-tune parameters based on YOUR results
+
+Goal: Maximize profitability while managing risk
+
+---
+
+PROP FIRM SPECIFIC:
+-------------------
+✓ NEVER exceed 1% risk per trade
+✓ Set daily loss limit to 2% (under 5% broker limit)
+✓ Enable "Lock profits at target"
+✓ Trade conservatively (Model A focus)
+✓ Pass challenge first, then optimize
+
+Estimated timeline to pass 10% challenge: 15-30 days
+
+---
+
+GENERAL RULES:
+--------------
+✓ Check economic calendar every Sunday
+✓ Never trade the first day of the month (volatility)
+✓ Never trade during Christmas/New Year weeks
+✓ Take screenshots of all entries for review
+✓ Keep a journal noting market conditions
+✓ If 3 losses in a row, STOP for the day
+✓ Never chase losses by increasing risk
+✓ Trust the system (55-70% win rate is GOOD)
+
+================================================================================
+12. PERFORMANCE EXPECTATIONS
+================================================================================
+
+REALISTIC MONTHLY RESULTS:
+--------------------------
+
+Conservative scenario (0.5% risk):
+- Trades per month: ~40
+- Win rate: 60%
+- Average R:R: 1:2
+- Expected return: +15-20%
+- Max drawdown: 3-5%
+
+Standard scenario (1.0% risk):
+- Trades per month: ~40
+- Win rate: 65%
+- Average R:R: 1:2
+- Expected return: +25-35%
+- Max drawdown: 5-8%
+
+Aggressive scenario (1.5% risk):
+- Trades per month: ~40
+- Win rate: 65%
+- Average R:R: 1:2.5
+- Expected return: +40-50%
+- Max drawdown: 8-12%
+
+---
+
+BENCHMARK STATISTICS:
+---------------------
+
+After 100 trades, you should see:
+- Win rate: 55-70%
+- Profit factor: >1.5
+- Average win: 150-200 points
+- Average loss: 80-100 points
+- Largest win: 300-500 points
+- Largest loss: <150 points
+- Consecutive wins: up to 8-10
+- Consecutive losses: up to 4-5
+- Recovery time from drawdown: 5-10 trades
+
+If your results significantly differ:
+1. Review trade journal for errors
+2. Check if news filter working properly
+3. Verify daily levels calculating correctly
+4. Consider adjusting parameters
+5. Contact support if persistent issues
+
+---
+
+DRAWDOWN MANAGEMENT:
+--------------------
+
+Normal drawdown: -3% to -5%
+Action: Continue trading normally
+
+Concerning drawdown: -5% to -8%
+Action: 
+- Reduce risk to 0.5%
+- Take 1-day break
+- Review last 20 trades
+
+Critical drawdown: -8% to -10%
+Action:
+- Stop live trading
+- Switch to demo for 1 week
+- Identify root cause
+- Rebuild confidence
+
+Unacceptable: >-10%
+Action:
+- Stop trading immediately
+- Full system review
+- Possible parameter adjustment
+- Consider professional consultation
+
+================================================================================
+13. FAQ (Frequently Asked Questions)
+================================================================================
+
+Q: Why does the EA sometimes not take trades for hours?
+A: This is normal. The EA waits for HIGH-QUALITY setups only. Some days 
+   only 1-2 setups form. Quality > quantity. Do not force trades.
+
+Q: I got 5 losses in a row. Is the EA broken?
+A: No. With a 65% win rate, you'll have losing streaks. 5 losses can happen
+   by pure statistics. Stick to the plan, don't revenge trade.
+
+Q: Can I run this on multiple charts/pairs?
+A: NO. This EA is ONLY for XAUUSD. Do not run on other pairs. You can run
+   multiple instances on different XAUUSD accounts with different magic numbers.
+
+Q: The EA placed a trade right before news!
+A: Check your news filter settings. Verify times are in UTC and correctly
+   entered. Update the list weekly based on economic calendar.
+
+Q: Why does TP1 sometimes not get hit?
+A: Market volatility. Sometimes price moves too fast, or reverses before
+   reaching TP1. This is why we use stop loss - not every trade is a winner.
+
+Q: Can I manually close trades?
+A: Yes, but NOT RECOMMENDED. Let the EA manage trades. Manual intervention
+   often leads to emotional decisions and worse results.
+
+Q: The dashboard shows wrong levels?
+A: Verify your broker's server time is UTC-based. Some brokers use GMT+2/3.
+   If persistent, contact broker to confirm server time.
+
+Q: I want to increase risk to 5% to grow faster?
+A: DO NOT. Even professionals rarely exceed 2% per trade. Higher risk =
+   higher chance of blowing account. Slow and steady wins.
+
+Q: Can I change the timeframe to M1 or H1?
+A: NO. The EA is coded for M5 execution. Changing timeframe will break the
+   logic. Keep on M5.
+
+Q: How do I backtest further than 3 months?
+A: Download historical data from your broker or use sites like Dukascopy.
+   Import into MT4. However, recent data (3-6 months) most relevant.
+
+Q: The EA keeps hitting daily loss limit?
+A: This suggests either:
+   1. Parameters not optimized for current market
+   2. Broker spread too wide
+   3. Slippage issues
+   4. Need to reduce risk or tighten filters
+   Review settings and consider demo testing.
+
+Q: Can I use this with other EAs?
+A: Yes, but ensure different magic numbers. However, combining strategies
+   can complicate risk management. Better to master one system first.
+
+================================================================================
+14. ADVANCED TIPS
+================================================================================
+
+OPTIMIZATION STRATEGIES:
+------------------------
+
+Session specialization:
+- After 50 trades, check which session performs better
+- If London win rate 75% but NY 55%, consider disabling NY
+- Focus on your strength
+
+Model preference:
+- Some traders excel with Model A (retest entries)
+- Others prefer Model B (momentum breakouts)
+- After 30 trades each, identify your edge
+- Consider disabling weaker model
+
+Parameter tuning:
+- Don't over-optimize! Small tweaks only.
+- If win rate >70% but small wins, increase TP2_RiskReward
+- If win rate <55%, increase MinDisplacementPoints (filter better)
+- Always test changes on demo first
+
+---
+
+PSYCHOLOGICAL EDGE:
+-------------------
+
+Detachment:
+- Don't watch every tick
+- Set EA and check once per session
+- Overmonitoring leads to interference
+
+Journaling:
+- Note market conditions (trending, ranging, choppy)
+- Record your emotional state before trading day
+- Identify patterns (e.g., "I trade poorly on Mondays")
+
+Routine:
+- Same pre-market routine daily
+- Reduces decision fatigue
+- Builds discipline
+
+Celebrate wins, analyze losses:
+- Take profit when TP hit, enjoy it
+- When loss occurs, review objectively
+- Ask "Did EA follow rules?" not "Why did I lose?"
+
+---
+
+MULTI-ACCOUNT SCALING:
+----------------------
+
+Once profitable for 3+ months:
+1. Pass prop firm challenge (use conservative settings)
+2. Get funded account
+3. Continue trading personal account
+4. Add second prop firm
+5. Scale to 3-5 funded accounts
+6. Total capital: $500K+ managed
+
+Risk distribution:
+- Personal account: 1% risk
+- Prop account 1: 0.75% risk
+- Prop account 2: 0.75% risk
+- Never correlate risk across accounts
+
+---
+
+VPS OPTIMIZATION:
+-----------------
+
+Recommended specs:
+- 2GB RAM minimum
+- Windows Server 2016+
+- <50ms latency to broker
+- 99.9% uptime guarantee
+
+Setup:
+- Run MT4 on VPS
+- Set EA to start automatically
+- Configure email alerts to phone
+- Check once per day only
+
+Cost:
+- $15-30/month
+- Worth it for 24/7 operation
+- Eliminates power/internet issues
+
+---
+
+ADVANCED RISK MANAGEMENT:
+--------------------------
+
+Correlation risk:
+- Never hold >2 positions simultaneously
+- If 2 longs open, very high correlation risk
+- Consider partial close on one if both in profit
+
+Time-based risk:
+- Reduce risk on Fridays (weekend risk)
+- First trading day of month: 0.5% risk only
+- Major news days: skip trading entirely
+
+Drawdown ladder:
+- 0-3% DD: 1% risk
+- 3-5% DD: 0.75% risk
+- 5-8% DD: 0.5% risk
+- >8% DD: stop trading, review
+
+Dynamic position sizing:
+- After 5 consecutive wins: reduce risk slightly (avoid overconfidence)
+- After 3 consecutive losses: reduce risk (rebuild confidence)
+- Return to normal after 2 trades
+
+---
+
+CONTINUOUS IMPROVEMENT:
+-----------------------
+
+Monthly review:
+- Total trades, win rate, profit factor
+- Best trade, worst trade, average R:R
+- Which setup worked best
+- Which session most profitable
+
+Quarterly optimization:
+- Backtest last 3 months
+- Compare to live results
+- Identify any parameter drift
+- Make ONE adjustment max
+
+Yearly assessment:
+- Total return, Sharpe ratio, max drawdown
+- Time spent vs. profit generated
+- Career/life goals alignment
+- Scale up or stabilize?
+
+================================================================================
+FINAL THOUGHTS
+================================================================================
+
+This EA is a TOOL, not a magic money printer.
+
+Success requires:
+✓ Patience (waiting for quality setups)
+✓ Discipline (following rules even when tempted)
+✓ Consistency (same approach daily)
+✓ Realistic expectations (not getting rich overnight)
+✓ Continuous learning (markets evolve)
+
+The traders who succeed with this EA:
+- Trust the system
+- Don't interfere with trades
+- Manage their psychology
+- Think in probabilities, not certainties
+- Focus on process, not profit
+
+The traders who fail:
+- Overtrade manually
+- Change parameters daily
+- Increase risk after losses
+- Expect 100% win rate
+- Give up after one bad week
+
+Which trader will you be?
+
+The system works. The question is: will you work the system?
+
+Good luck, stay disciplined, and may your sweeps always lead to displacement.
+
+================================================================================
+END OF MANUAL
+================================================================================

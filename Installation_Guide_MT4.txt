@@ -1,0 +1,396 @@
+================================================================================
+LIQUIDITY SCALPER EA - MT4 INSTALLATION GUIDE
+================================================================================
+
+VERSION: 1.0.0
+BUILD DATE: 2026-02-10
+PLATFORM: MetaTrader 4
+SYMBOL: XAUUSD (Gold)
+
+================================================================================
+SYSTEM REQUIREMENTS
+================================================================================
+
+✓ MetaTrader 4 (build 1325 or higher)
+✓ Windows 7/8/10/11 OR Mac/Linux with Wine
+✓ Minimum 4GB RAM
+✓ Stable internet connection (VPS recommended for 24/7 operation)
+✓ Account with XAUUSD trading enabled
+✓ Minimum account balance: $500 (recommended $5,000+)
+
+================================================================================
+STEP 1: DOWNLOAD FILES
+================================================================================
+
+Ensure you have the following files:
+
+1. LiquidityScalper_MT4.mq4  (Main EA file)
+2. LS_Functions.mqh          (Helper functions library)
+3. LS_Config.mqh             (Configuration file)
+4. Installation_Guide_MT4.txt (This file)
+
+================================================================================
+STEP 2: INSTALL EA FILES
+================================================================================
+
+METHOD A - Automatic Installation:
+
+1. Open MetaTrader 4
+2. Click File → Open Data Folder
+3. Navigate to: MQL4 → Experts
+4. Copy "LiquidityScalper_MT4.mq4" into the Experts folder
+5. Navigate to: MQL4 → Include
+6. Copy "LS_Functions.mqh" and "LS_Config.mqh" into the Include folder
+7. Restart MetaTrader 4
+
+METHOD B - Manual Installation:
+
+Windows:
+C:\Users\[YourUsername]\AppData\Roaming\MetaQuotes\Terminal\[BrokerID]\MQL4\
+
+Mac (with Wine):
+~/Library/Application Support/Wine/...
+
+1. Place .mq4 file in: MQL4\Experts\
+2. Place .mqh files in: MQL4\Include\
+3. Restart MT4
+
+================================================================================
+STEP 3: COMPILE THE EA
+================================================================================
+
+1. In MT4, press F4 or click Tools → MetaQuotes Language Editor
+2. In the Navigator panel (left side), expand "Experts"
+3. Double-click "LiquidityScalper_MT4.mq4"
+4. Click the "Compile" button (or press F7)
+5. Check the "Errors" tab at the bottom
+6. You should see: "0 error(s), 0 warning(s)"
+7. If errors appear, verify all .mqh files are in the Include folder
+
+✓ Successful compilation message:
+  "LiquidityScalper_MT4.ex4 compiled successfully"
+
+================================================================================
+STEP 4: CONFIGURE MT4 SETTINGS
+================================================================================
+
+ENABLE ALGO TRADING:
+
+1. Click Tools → Options
+2. Go to "Expert Advisors" tab
+3. CHECK the following:
+   ☑ Allow automated trading
+   ☑ Allow DLL imports
+   ☑ Allow imports from external experts
+   ☑ Allow WebRequest for listed URL (add: https://www.forexfactory.com)
+4. Click OK
+
+ENABLE AUTO TRADING BUTTON:
+
+1. Look at the top toolbar
+2. Click the "AutoTrading" button (should turn green)
+3. If it's grayed out, your broker may not allow EAs
+
+================================================================================
+STEP 5: ATTACH EA TO CHART
+================================================================================
+
+1. Open a new chart: File → New Chart → XAUUSD
+2. Set timeframe to M5: Click "M5" in the toolbar
+3. In the Navigator panel (Ctrl+N), expand "Expert Advisors"
+4. Drag "LiquidityScalper_MT4" onto the XAUUSD M5 chart
+5. A settings window will appear
+
+================================================================================
+STEP 6: CONFIGURE EA PARAMETERS
+================================================================================
+
+RECOMMENDED SETTINGS FOR BEGINNERS:
+
+=== RISK MANAGEMENT ===
+Risk per trade (%): 0.5  (Conservative - increase to 1.0 when confident)
+Daily loss limit (%): 2.0
+Daily profit target (%): 3.0
+Lock profits at target: false
+
+=== TRADING MODELS ===
+Enable Model A: true
+Enable Model B: true
+Max stop loss Model A: 150
+Max stop loss Model B: 120
+
+=== SESSION SETTINGS ===
+Trade London session: true
+Trade NY session: true
+London start hour: 8
+London end hour: 12
+NY start hour: 13
+NY end hour: 17
+Max trades per session: 3
+Max trades per day: 5
+
+=== ENTRY SETTINGS ===
+Min displacement points: 80
+Max retest candles: 10
+Order block lookback: 10
+Liquidity sweep buffer: 5
+
+=== TRADE MANAGEMENT ===
+TP1 Risk:Reward: 1.5
+TP2 Risk:Reward: 3.0
+TP1 Partial close %: 50
+Breakeven trigger: 100
+Breakeven buffer: 2
+Trail start points: 100
+Trail stop distance: 25
+
+=== NEWS FILTER ===
+Enable news filter: true
+Minutes before news: 15
+Minutes after news: 15
+High impact times: 08:30,13:30,15:00
+
+=== VISUAL & ALERTS ===
+Show dashboard: true
+Draw key levels: true
+Enable sound alerts: true
+Enable email alerts: false
+Enable push alerts: false
+
+=== EA SETTINGS ===
+Magic number: 777888
+Trade comment: LiqScalp
+
+================================================================================
+STEP 7: ACTIVATE THE EA
+================================================================================
+
+1. After setting parameters, check "Allow live trading"
+2. Click OK
+3. You should see a smiley face ☺ in the top-right corner of the chart
+4. If you see X or sad face ☹, check:
+   - AutoTrading button is ON (green)
+   - "Allow live trading" is checked
+   - Your broker allows EAs
+   - Internet connection is stable
+
+================================================================================
+STEP 8: VERIFY EA IS RUNNING
+================================================================================
+
+CHECK THE EXPERTS TAB:
+
+1. Click View → Terminal (or press Ctrl+T)
+2. Go to "Experts" tab
+3. You should see:
+   ===================================
+   Liquidity Scalper EA Initialized
+   Symbol: XAUUSD
+   Account: [Your account number]
+   Risk per trade: 0.5%
+   ===================================
+
+CHECK THE CHART:
+
+1. You should see the dashboard in the top-left corner showing:
+   - Current session
+   - Trade count
+   - Daily P/L
+   - Key levels (PDH, PDL, ASH, ASL)
+
+2. You should see horizontal lines on the chart:
+   - Red solid lines: PDH/PDL
+   - Orange dotted lines: ASH/ASL
+   - Gray dashed line: Day Open
+
+================================================================================
+STEP 9: INITIAL TESTING (IMPORTANT!)
+================================================================================
+
+BEFORE LIVE TRADING:
+
+1. TEST ON DEMO ACCOUNT FIRST (minimum 2 weeks)
+2. Paper trade to verify strategy understanding
+3. Check that daily levels are calculated correctly
+4. Verify news filter is working (check during high-impact news)
+5. Monitor first 20 trades to ensure proper execution
+
+BACKTEST THE EA:
+
+1. Press Ctrl+R or View → Strategy Tester
+2. Select "LiquidityScalper_MT4" from Expert Advisor dropdown
+3. Symbol: XAUUSD
+4. Period: M5
+5. Date range: Last 3 months
+6. Model: Every tick (most accurate)
+7. Click "Start"
+8. Review results:
+   - Win rate should be 55-70%
+   - Profit factor > 1.5
+   - Max drawdown < 15%
+
+================================================================================
+STEP 10: MONITOR & OPTIMIZE
+================================================================================
+
+DAILY ROUTINE:
+
+1. Check EA at 07:45 UTC (before London open)
+2. Verify daily levels are drawn correctly
+3. Check economic calendar for high-impact news
+4. Monitor first trade of the day closely
+5. Review daily P/L at 17:00 UTC
+
+WEEKLY REVIEW:
+
+1. Analyze trade journal (in Terminal → Account History)
+2. Calculate actual win rate and average R:R
+3. Identify which session performs better (London vs NY)
+4. Adjust risk if necessary (max 1% per trade)
+5. Check for any errors in Experts log
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+PROBLEM: EA doesn't open any trades
+
+SOLUTIONS:
+- Check if you're within trading hours (08:00-12:00 or 13:30-17:00 UTC)
+- Verify daily levels are not zero (check Experts log)
+- Ensure max trades per day not reached
+- Check if daily loss limit was hit
+- Verify news filter isn't blocking trades
+- Make sure account has sufficient free margin
+
+---
+
+PROBLEM: Stop loss is too wide / EA rejects trades
+
+SOLUTIONS:
+- Market volatility may be too high
+- Adjust "Max stop loss" parameters
+- Check if liquidity sweep is far from order block
+- Review recent price action for extreme volatility
+
+---
+
+PROBLEM: Too many losing trades in a row
+
+SOLUTIONS:
+- This is normal! System expects 55-70% win rate
+- Do NOT increase risk to "recover losses"
+- Take a break after 3 consecutive losses
+- Review trade entries in backtest
+- Consider reducing trade frequency (increase displacement minimum)
+
+---
+
+PROBLEM: Dashboard not showing / levels not drawing
+
+SOLUTIONS:
+- Right-click chart → Properties → Common tab
+- Check "Show object descriptions"
+- Increase max bars in chart (Tools → Options → Charts)
+- Manually run: ObjectsDeleteAll() then restart EA
+
+---
+
+PROBLEM: Error 130 (Invalid stops)
+
+SOLUTIONS:
+- Your broker may have minimum stop distance
+- Check broker specifications (Market Watch → Right-click Symbol → Specification)
+- Increase "Min displacement points" parameter
+- Contact broker to verify XAUUSD trading conditions
+
+---
+
+PROBLEM: Error 134 (Not enough money)
+
+SOLUTIONS:
+- Reduce risk per trade to 0.5% or lower
+- Increase account balance
+- Close other open trades
+- Check required margin for XAUUSD
+
+================================================================================
+PROP FIRM CHALLENGE SETTINGS
+================================================================================
+
+FOR FTMO / FUNDED TRADER CHALLENGES:
+
+Risk per trade: 0.5% (to stay within 5% daily loss)
+Daily loss limit: 2.0% (buffer under 5% limit)
+Max trades per day: 3 (quality over quantity)
+Enable Model A: true
+Enable Model B: false (Model A is more consistent)
+Lock profits at target: true (secure gains)
+
+EXPECTED RESULTS:
+- Time to pass 10% challenge: 15-30 days
+- Expected monthly return: 10-20%
+- Max drawdown: 5-8%
+
+================================================================================
+VPS SETUP (RECOMMENDED)
+================================================================================
+
+For 24/7 operation without your computer running:
+
+RECOMMENDED VPS PROVIDERS:
+- Forex VPS (forexvps.net)
+- VPS Server (vpsserver.com)
+- Beeks (beeksfinancialcloud.com)
+
+SETUP STEPS:
+1. Purchase VPS with Windows Server
+2. Install MetaTrader 4 on VPS
+3. Copy EA files to VPS MT4
+4. Set up remote desktop access
+5. Configure EA and let it run 24/7
+
+VPS BENEFITS:
+✓ No power outages
+✓ No internet disconnections
+✓ Low latency to broker
+✓ Run multiple EAs simultaneously
+
+================================================================================
+CONTACT & SUPPORT
+================================================================================
+
+For questions, bug reports, or optimization help:
+
+Email: support@liquidityscalper.com
+Telegram: @LiquidityScalperSupport
+
+Join our community:
+Discord: discord.gg/liquidityscalper
+Forum: community.liquidityscalper.com
+
+================================================================================
+VERSION HISTORY
+================================================================================
+
+v1.0.0 (2026-02-10)
+- Initial release
+- Model A & B implementation
+- Dashboard and visual aids
+- Prop firm safety features
+
+================================================================================
+DISCLAIMER
+================================================================================
+
+Trading forex and CFDs involves substantial risk of loss. Past performance 
+does not guarantee future results. This EA is a tool to assist trading 
+decisions but does not guarantee profits. Always test on demo accounts 
+first and never risk more than you can afford to lose.
+
+The developer is not responsible for any losses incurred through use of 
+this EA. Use at your own risk.
+
+================================================================================
+GOOD LUCK & HAPPY TRADING!
+================================================================================
